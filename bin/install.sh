@@ -8,7 +8,7 @@ mkdir -p "$BIN_DIR"
 
 if [ "$OS" = "Linux" ] || [ "$OS" = "Darwin" ]; then
     echo "🔧 Downloading veb CLI for $OS..."
-    curl -fsSL https://veb.yourdomain.com/veb -o "$BIN_DIR/veb"
+    curl -L https://vebinstall.overload.studio/bin/veb-linux -o ~/.local/bin/veb
     chmod +x "$BIN_DIR/veb"
     echo "✅ Installed successfully! Run 'veb' from anywhere."
 else
