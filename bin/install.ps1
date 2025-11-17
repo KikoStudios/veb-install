@@ -4,7 +4,7 @@ param(
 )
 
 # Download config
-$ConfigUrl = "https://raw.githubusercontent.com/KikoStudios/veb-install/main/install-config.sh"
+$ConfigUrl = "https://raw.githubusercontent.com/KikoStudios/veb-install/bin/install-config.sh"
 Write-Host "Downloading config from $ConfigUrl"
 Invoke-WebRequest -Uri $ConfigUrl -OutFile "$env:TEMP\veb-install-config.sh"
 # Note: PowerShell cannot directly “source” a bash script. We’ll parse manually.
