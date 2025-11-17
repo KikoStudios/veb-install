@@ -2,7 +2,7 @@
 set -e
 
 # Source the config (adjust path if needed)
-CONFIG_URL="https://raw.githubusercontent.com/KikoStudios/veb-install/bin/install-config.sh"
+CONFIG_URL="https://vebinstall.overload.studio/bin/install-config.sh"
 echo "Downloading config from ${CONFIG_URL} ..."
 curl -fsSL "${CONFIG_URL}" -o /tmp/veb-install-config.sh
 . /tmp/veb-install-config.sh
