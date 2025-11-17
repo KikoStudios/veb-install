@@ -1,49 +1,49 @@
-#!/bin/bash
-
-
+#!/usr/bin/env sh
 set -e
 
+# Source the config (adjust path if needed)
+CONFIG_URL="https://raw.githubusercontent.com/KikoStudios/veb-install/main/install-config.sh"
+echo "Downloading config from ${CONFIG_URL} ..."
+curl -fsSL "${CONFIG_URL}" -o /tmp/veb-install-config.sh
+. /tmp/veb-install-config.sh
 
+# Determine OS and ARCH
+OS=$(uname | tr '[:upper:]' '[:lower:]')
+ARCH=$(uname -m)
 
-
-
-OS=$(uname -s)
-
-
-BIN_DIR="/usr/local/bin"
-
-
-[ "$EUID" -ne 0 ] && BIN_DIR="$HOME/.local/bin"
-
-
-mkdir -p "$BIN_DIR"
-
-
-
-
-
-if [ "$OS" = "Linux" ] || [ "$OS" = "Darwin" ]; then
-
-
-    echo "🔧 Downloading veb CLI for $OS..."
-
-
-    curl -fsSL https://github.com/KikoStudios/veb-cli/releases/download/Beta/veb -o "$BIN_DIR/veb"
-
-
-    chmod +x "$BIN_DIR/veb"
-
-
-    echo "✅ Installed successfully! Run 'veb' from anywhere."
-
-
-else
-
-
-    echo "❌ OS $OS not supported yet."
-
-
+case "$OS" in
+  linux)
+    case "$ARCH" in
+      x86_64) DL_URL="$URL_LINUX_X64" ;;
+      aarch64|arm64) DL_URL="$URL_MAC_ARM64" ;;  # if you treat arm Linux same as Mac ARM? adjust
+      *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;;
+    esac
+    ;;
+  darwin)
+    case "$ARCH" in
+      x86_64) DL_URL="$URL_MAC_ARM64" ;;  # if you only built one Mac version
+      arm64) DL_URL="$URL_MAC_ARM64" ;;
+      *) echo "Unsupported architecture: $ARCH" >&2; exit 1 ;;
+    esac
+    ;;
+  *)
+    echo "Unsupported OS: $OS" >&2
     exit 1
+    ;;
+esac
 
+echo "Downloading binary from ${DL_URL}"
+curl -fsSL "${DL_URL}" -o /tmp/veb
+chmod +x /tmp/veb
 
+# Install location
+if [ -w /usr/local/bin ]; then
+  mv /tmp/veb /usr/local/bin/veb
+else
+  mkdir -p "$HOME/bin"
+  mv /tmp/veb "$HOME/bin/veb"
+  echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.profile"
+  echo "Added $HOME/bin to PATH in .profile"
 fi
+
+echo "Installation complete. Run: veb --help"
